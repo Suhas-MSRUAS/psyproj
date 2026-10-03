@@ -1,0 +1,46 @@
+# Central configuration. Pin everything here so runs are reproducible.
+# Switch "backend: stub" -> "backend: real" per component once you want actual
+# model weights pulled from Hugging Face. Stub backends are deterministic and
+# require no downloads, so tests and demos run offline.
+
+paths:
+  annomi_simple_csv: "tracka/AnnoMI-main/AnnoMI-simple.csv"
+  annomi_full_csv: "tracka/AnnoMI-main/AnnoMI-full.csv"
+  wisdm_raw_phone_accel_dir: "trackb/wisdm-dataset/wisdm-dataset/raw/phone/accel"
+  wisdm_activity_key: "trackb/wisdm-dataset/wisdm-dataset/activity_key.txt"
+  fictional_audio_dir: "data/audio"          # you drop organizer-style WAV + .json transcript pairs here
+  rag_corpus_dir: "data/rag_corpus"
+  fixtures_dir: "fixtures"
+
+track_a:
+  device: auto             # auto (CUDA GPU if available, else CPU) | cuda | cpu
+  asr:
+    backend: stub          # stub | real. Uploaded audio always uses real Whisper.
+    real_checkpoint: "openai/whisper-small"
+    # openai-whisper verifies this SHA-256 of small.pt on load.
+    weights_sha256: "9ecf779972d90ba49c06d968637d720dd632c55bbf19d441fb42bf17a411e794"
+  embedding:
+    backend: real           # stub | real
+    # Spec's listed alternative to BAAI/bge-small-en-v1.5.
+    real_checkpoint: "sentence-transformers/all-MiniLM-L6-v2"
+    revision: "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"   # frozen Hugging Face commit
+  llm:
+    backend: real           # stub | real
+    # Spec's listed alternative to SmolLM3-3B (~3.09B params, Qwen Research License).
+    real_checkpoint: "Qwen/Qwen2.5-3B-Instruct"
+    revision: "aa8e72537993ba99e69dfaafa59ed015b17504d1"   # frozen Hugging Face commit
+    max_new_tokens: 320
+  retrieval:
+    top_k: 4
+    # Below this cosine similarity the chatbot abstains instead of answering.
+    # Scales differ per embedding, so there is one threshold per backend.
+    min_similarity:
+      stub: 0.15
+      real: 0.35
+
+track_b:
+  sampling_hz_expected: 20          # WISDM raw phone accelerometer
+  window_seconds: 10
+  window_overlap: 0.0
+  stationary_variance_threshold: 0.6   # m/s^2, std-dev of magnitude within a window
+  max_gap_seconds: 2.0                 # gaps larger than this are flagged, not interpolated

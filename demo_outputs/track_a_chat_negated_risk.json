@@ -1,0 +1,13 @@
+{
+  "conversation_or_case_id": "demo-1",
+  "question": "I don't want to hurt myself, I'm just tired.",
+  "answer": "Thank you for sharing that — it sounds like a lot to carry. This has been flagged for a human (not this chatbot) to follow up with you. In the meantime, please consider reaching out to a counsellor, doctor, or someone you trust.",
+  "abstained": true,
+  "cited_passage_ids": [],
+  "routing": {
+    "category": "review",
+    "rationale": "Risk phrase 'hurt myself' detected but immediately preceded by a negation cue; routed to human review rather than auto-cleared or auto-escalated, since negated risk mentions still warrant a careful look rather than being dismissed by keyword matching alone.",
+    "is_artificial_label": true,
+    "source": "software_routing_demo"
+  }
+}

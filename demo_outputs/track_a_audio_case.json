@@ -1,0 +1,27 @@
+{
+  "case_id": "audio-case_001",
+  "transcript": "I have not been well for the past two weeks.",
+  "asr_evaluation": {
+    "case_id": "case_001",
+    "reference_transcript": "I have not been sleeping well for the past two weeks.",
+    "hypothesis_transcript": "I have not been well for the past two weeks.",
+    "word_error_rate": 0.09090909090909091,
+    "low_confidence_spans": [],
+    "critical_word_flags": [],
+    "negation_preserved": true
+  },
+  "statement": {
+    "reported_concerns": [],
+    "duration_if_said": "for the past two weeks",
+    "changes_in_functioning_if_said": null,
+    "explicit_negations": [
+      "I have not been well for the past two weeks."
+    ],
+    "unknown_fields": [
+      "changes_in_functioning"
+    ],
+    "source_turn_ids": [
+      0
+    ]
+  }
+}

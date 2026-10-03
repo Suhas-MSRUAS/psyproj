@@ -1,0 +1,14 @@
+transcript_id,mi_quality,video_title,video_url,topic,utterance_id,interlocutor,timestamp,utterance_text,main_therapist_behaviour,client_talk_type
+100,high,"Fixture: low mood check-in",https://example.org/fixture-100,low mood,3,client,00:00:30,"Yes, I feel exhausted most mornings and I don't really enjoy things like I used to.",n/a,sustain_talk
+100,high,"Fixture: low mood check-in",https://example.org/fixture-100,low mood,0,therapist,00:00:00,"Hi, thanks for coming in today. How have you been feeling lately?",question,n/a
+100,high,"Fixture: low mood check-in",https://example.org/fixture-100,low mood,5,client,00:00:50,"Maybe. I guess I'm just not sure where to start.",n/a,neutral
+100,high,"Fixture: low mood check-in",https://example.org/fixture-100,low mood,1,client,00:00:10,"I have not been sleeping well for the past three weeks.",n/a,sustain_talk
+100,high,"Fixture: low mood check-in",https://example.org/fixture-100,low mood,4,therapist,00:00:40,That sounds difficult. Do you want to talk more about what's been going on?,question,n/a
+100,high,"Fixture: low mood check-in",https://example.org/fixture-100,low mood,2,therapist,00:00:20,I see. Earlier you mentioned trouble sleeping -- has that affected your energy during the day?,question,n/a
+101,high,"Fixture: validation edge cases",https://example.org/fixture-101,low mood,0,therapist,00:00:00,Thanks for filling out the form today.,question,n/a
+101,high,"Fixture: validation edge cases",https://example.org/fixture-101,low mood,1,client,00:00:05,Sure.,n/a,neutral
+101,high,"Fixture: validation edge cases",https://example.org/fixture-101,low mood,2,client,00:00:10,"I don't want to hurt myself, I'm just really tired.",n/a,sustain_talk
+101,high,"Fixture: validation edge cases",https://example.org/fixture-101,low mood,2,client,00:00:10,"I don't want to hurt myself, I'm just really tired.",n/a,sustain_talk
+101,high,"Fixture: validation edge cases",https://example.org/fixture-101,low mood,3,therapist,00:00:15,,question,n/a
+101,high,"Fixture: validation edge cases",https://example.org/fixture-101,low mood,4,client,00:09:025,I feel okay today.,n/a,neutral
+101,high,"Fixture: validation edge cases",https://example.org/fixture-101,low mood,5,client,00:00:10,"Actually, I take that back.",n/a,neutral

@@ -1,0 +1,213 @@
+{
+  "clip_id": "wisdm-1600-A-0",
+  "source_dataset": "wisdm",
+  "device": "phone",
+  "sensor": "accelerometer",
+  "units": "m/s^2",
+  "sampling_hz_declared": 20.0,
+  "sampling_hz_estimated": 19.85939390495868,
+  "windows": [
+    {
+      "window_index": 0,
+      "start_time_s": 0.0,
+      "end_time_s": 10.0,
+      "n_samples": 199,
+      "mean_magnitude": 10.064773954143845,
+      "std_magnitude": 4.159319580642633,
+      "movement_intensity": 2.9160042194496194,
+      "state": "active"
+    },
+    {
+      "window_index": 1,
+      "start_time_s": 10.0,
+      "end_time_s": 20.0,
+      "n_samples": 199,
+      "mean_magnitude": 10.141744897816231,
+      "std_magnitude": 4.278303517085206,
+      "movement_intensity": 3.2027460055939314,
+      "state": "active"
+    },
+    {
+      "window_index": 2,
+      "start_time_s": 20.0,
+      "end_time_s": 30.0,
+      "n_samples": 198,
+      "mean_magnitude": 9.986892479491548,
+      "std_magnitude": 4.02333923072357,
+      "movement_intensity": 2.955636908158372,
+      "state": "active"
+    },
+    {
+      "window_index": 3,
+      "start_time_s": 30.0,
+      "end_time_s": 40.0,
+      "n_samples": 198,
+      "mean_magnitude": 10.152857374825873,
+      "std_magnitude": 4.113613382888074,
+      "movement_intensity": 2.991469085844301,
+      "state": "active"
+    },
+    {
+      "window_index": 4,
+      "start_time_s": 40.0,
+      "end_time_s": 50.0,
+      "n_samples": 198,
+      "mean_magnitude": 10.048644396354234,
+      "std_magnitude": 3.7590306004491825,
+      "movement_intensity": 2.6340986356836584,
+      "state": "active"
+    },
+    {
+      "window_index": 5,
+      "start_time_s": 50.0,
+      "end_time_s": 60.0,
+      "n_samples": 199,
+      "mean_magnitude": 10.139641189472842,
+      "std_magnitude": 4.02335831988824,
+      "movement_intensity": 2.832716620293328,
+      "state": "active"
+    },
+    {
+      "window_index": 6,
+      "start_time_s": 60.0,
+      "end_time_s": 70.0,
+      "n_samples": 199,
+      "mean_magnitude": 10.047062814933755,
+      "std_magnitude": 4.038943607991358,
+      "movement_intensity": 2.9217539282363196,
+      "state": "active"
+    },
+    {
+      "window_index": 7,
+      "start_time_s": 70.0,
+      "end_time_s": 80.0,
+      "n_samples": 198,
+      "mean_magnitude": 10.12079287430022,
+      "std_magnitude": 3.741257986667329,
+      "movement_intensity": 2.674103141486701,
+      "state": "active"
+    },
+    {
+      "window_index": 8,
+      "start_time_s": 80.0,
+      "end_time_s": 90.0,
+      "n_samples": 199,
+      "mean_magnitude": 10.151278739202658,
+      "std_magnitude": 3.89043047768878,
+      "movement_intensity": 2.789273775958338,
+      "state": "active"
+    },
+    {
+      "window_index": 9,
+      "start_time_s": 90.0,
+      "end_time_s": 100.0,
+      "n_samples": 198,
+      "mean_magnitude": 10.103924629466215,
+      "std_magnitude": 3.665467471288932,
+      "movement_intensity": 2.675281931448893,
+      "state": "active"
+    },
+    {
+      "window_index": 10,
+      "start_time_s": 100.0,
+      "end_time_s": 110.0,
+      "n_samples": 199,
+      "mean_magnitude": 10.087855676990355,
+      "std_magnitude": 3.4462163012445,
+      "movement_intensity": 2.3706492107862043,
+      "state": "active"
+    },
+    {
+      "window_index": 11,
+      "start_time_s": 110.0,
+      "end_time_s": 120.0,
+      "n_samples": 199,
+      "mean_magnitude": 10.123261470458635,
+      "std_magnitude": 3.588291667057192,
+      "movement_intensity": 2.4820378329187065,
+      "state": "active"
+    },
+    {
+      "window_index": 12,
+      "start_time_s": 120.0,
+      "end_time_s": 130.0,
+      "n_samples": 198,
+      "mean_magnitude": 10.140752863588228,
+      "std_magnitude": 3.695098228496488,
+      "movement_intensity": 2.7078828635972796,
+      "state": "active"
+    },
+    {
+      "window_index": 13,
+      "start_time_s": 130.0,
+      "end_time_s": 140.0,
+      "n_samples": 199,
+      "mean_magnitude": 10.15312133592381,
+      "std_magnitude": 3.5731744592654993,
+      "movement_intensity": 2.5258022516841536,
+      "state": "active"
+    },
+    {
+      "window_index": 14,
+      "start_time_s": 140.0,
+      "end_time_s": 150.0,
+      "n_samples": 198,
+      "mean_magnitude": 10.182304611619221,
+      "std_magnitude": 3.601282493513413,
+      "movement_intensity": 2.5292021297803426,
+      "state": "active"
+    },
+    {
+      "window_index": 15,
+      "start_time_s": 150.0,
+      "end_time_s": 160.0,
+      "n_samples": 199,
+      "mean_magnitude": 10.124984409538913,
+      "std_magnitude": 3.6287356418733965,
+      "movement_intensity": 2.6306333688144528,
+      "state": "active"
+    },
+    {
+      "window_index": 16,
+      "start_time_s": 160.0,
+      "end_time_s": 170.0,
+      "n_samples": 199,
+      "mean_magnitude": 10.177558522722023,
+      "std_magnitude": 3.6950083210573443,
+      "movement_intensity": 2.5546869284279063,
+      "state": "active"
+    },
+    {
+      "window_index": 17,
+      "start_time_s": 170.0,
+      "end_time_s": 180.0,
+      "n_samples": 197,
+      "mean_magnitude": 10.067473120150847,
+      "std_magnitude": 3.3254999431416126,
+      "movement_intensity": 2.4131238972617015,
+      "state": "active"
+    }
+  ],
+  "quality": {
+    "total_readings": 3573,
+    "missing_count": 0,
+    "duplicate_timestamp_count": 0,
+    "gap_count": 0,
+    "max_gap_seconds": 0.10070800801622681,
+    "non_monotonic_count": 0,
+    "coverage_ratio": 0.9929696891657845,
+    "stationary_phone_suspected": false
+  },
+  "ground_truth_activity_label": "active",
+  "supported_activity_states": [
+    "active",
+    "stationary",
+    "uncertain"
+  ],
+  "limitations": [
+    "This is a short, controlled recording and must not be extrapolated to daily activity, longitudinal decline, or depression severity.",
+    "A low-variance window may mean the phone was set down on a table, not that its owner was inactive.",
+    "The accelerometer signal includes the gravity component; orientation changes can shift readings even without much movement.",
+    "Windows with insufficient sample coverage are marked 'uncertain' rather than guessed."
+  ]
+}

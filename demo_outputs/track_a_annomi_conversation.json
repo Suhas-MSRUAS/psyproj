@@ -1,0 +1,39 @@
+{
+  "conversation_id": "annomi-0",
+  "mi_quality": "high",
+  "topic": "reducing alcohol consumption",
+  "n_turns": 54,
+  "statement": {
+    "reported_concerns": [
+      "Well, I usually drink when I'm at home trying to unwind and I drink while I'm watching a movie.",
+      "Well, then I feel blur again.",
+      "Yes, sometimes I feel worse after drinking.",
+      "I think that would be my goal. [uncertain]"
+    ],
+    "duration_if_said": null,
+    "changes_in_functioning_if_said": null,
+    "explicit_negations": [
+      "I knew my doctor didn't like me drinking the amount that I did but I didn't know that seven was the limit.",
+      "Well, to be honest, I drink sometimes when I'm feeling down and I find it more interesting and not so blur.",
+      "Sometimes I just don't like how much I drink.",
+      "No, it's not like I get crazy or anything but I just don't like the amount that I'm drinking.",
+      "Well, I don't think that I'm ready to cut down to seven drinks a week.",
+      "Well, I'm more ready than a six because I'm ready to cut back on my drinking and I don't wanna make my depression any worse."
+    ],
+    "unknown_fields": [
+      "duration",
+      "changes_in_functioning"
+    ],
+    "source_turn_ids": [
+      11,
+      17,
+      23,
+      25,
+      29,
+      31,
+      33,
+      35,
+      39
+    ]
+  }
+}

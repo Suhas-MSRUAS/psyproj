@@ -1,0 +1,25 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+psy/
+tracka/AnnoMI-main/
+trackb/wisdm-dataset/
+data/audio/*.wav
+*.index
+.env
+
+# Assignment specification (organizer's document, not redistributed)
+Depression_Assignment_Separate_AnnoMI_Accelerometer.pdf
+# Third-party dataset documentation (comes with the WISDM download)
+trackb/*.pdf
+
+# Local editor / assistant settings
+.claude/
+.vscode/
+
+# Personal audio clips must never be committed (spec: keep consented audio private)
+data/audio/*.mp3
+data/audio/*.m4a
+data/audio/*.ogg
+data/audio/*.flac
+data/audio/*.webm

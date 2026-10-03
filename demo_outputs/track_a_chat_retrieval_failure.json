@@ -1,0 +1,13 @@
+{
+  "conversation_or_case_id": "demo-1",
+  "question": "What is the capital of France?",
+  "answer": "I don't have a passage from the approved sources that answers this directly, so I won't guess. Please consult a clinician or a source like the WHO or NIMH depression pages.",
+  "abstained": true,
+  "cited_passage_ids": [],
+  "routing": {
+    "category": "support",
+    "rationale": "No risk or distress phrase in the fixed fixture list matched; routed to general support/information path.",
+    "is_artificial_label": true,
+    "source": "software_routing_demo"
+  }
+}

@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Counselling Chatbot &amp; Activity Analysis</title>
+<style>
+  :root {
+    --bg: #f5f6f8; --panel: #fff; --ink: #1c2230; --muted: #687083; --line: #e3e6ec;
+    --side: #151b28; --side-ink: #c9cfdb; --side-muted: #7d8699;
+    --accent: #3461d6; --accent-soft: #eaf0fd;
+    --therapist: #f0f2f6; --client: #e9f5ee;
+    --active: #2f8f5b; --stationary: #8a94a6; --uncertain: #d08a2f;
+    --support: #2f8f5b; --review: #c27c12; --urgent: #c23a3a;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body { margin: 0; font: 14px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--ink); background: var(--bg); display: flex; }
+
+  /* ---- sidebar ---- */
+  aside { width: 240px; flex-shrink: 0; background: var(--side); color: var(--side-ink); display: flex; flex-direction: column; padding: 18px 12px; }
+  .brand { font-weight: 700; color: #fff; font-size: 15px; padding: 0 8px; line-height: 1.3; }
+  .brand small { display: block; color: var(--side-muted); font-weight: 400; font-size: 12px; margin-top: 4px; }
+  .group { margin-top: 24px; }
+  .group-label { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--side-muted); padding: 0 8px 6px; }
+  .nav-item { display: block; width: 100%; text-align: left; border: 0; background: none; color: var(--side-ink); font: inherit; padding: 8px 10px; border-radius: 6px; cursor: pointer; }
+  .nav-item:hover { background: #222a3a; }
+  .nav-item.on { background: var(--accent); color: #fff; }
+  .status { margin-top: auto; font-size: 12px; color: var(--side-muted); padding: 10px 8px 0; border-top: 1px solid #2a3244; }
+  .status b { color: var(--side-ink); font-weight: 600; }
+  .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; background: var(--uncertain); vertical-align: 1px; }
+  .dot.ok { background: #3ec27a; }
+  .status a { color: var(--side-muted); }
+
+  /* ---- content ---- */
+  main { flex: 1; min-width: 0; overflow-y: auto; }
+  .view { max-width: 980px; margin: 0 auto; padding: 28px 32px 48px; }
+  .view-head h1 { margin: 0; font-size: 22px; }
+  .view-head p { margin: 4px 0 20px; color: var(--muted); }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin-bottom: 16px; }
+  .card h2 { margin: 0 0 12px; font-size: 15px; }
+  .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin: 16px 0 6px; font-weight: 600; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  select, input[type=file], textarea { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; background: #fff; color: var(--ink); max-width: 100%; }
+  textarea { width: 100%; resize: vertical; }
+  .btn { font: inherit; font-weight: 600; padding: 8px 16px; border-radius: 6px; border: 1px solid var(--accent); background: var(--accent); color: #fff; cursor: pointer; }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .chip { font: inherit; font-size: 12px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--ink); cursor: pointer; }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .muted { color: var(--muted); }
+  .small { font-size: 12px; }
+  .err { color: var(--urgent); }
+  .hint { font-size: 12px; color: var(--muted); }
+  .disclaimer { font-size: 12px; color: var(--muted); border-left: 3px solid var(--line); padding-left: 10px; margin-bottom: 20px; }
+
+  dl.kv { display: grid; grid-template-columns: 170px 1fr; gap: 6px 16px; margin: 0; }
+  dl.kv dt { color: var(--muted); }
+  dl.kv dd { margin: 0; }
+  ul.plain { margin: 0; padding-left: 18px; }
+  .badge { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: .03em; }
+  .badge.support, .badge.active { background: var(--support); }
+  .badge.review, .badge.uncertain { background: var(--review); }
+  .badge.urgent { background: var(--urgent); }
+  .badge.stationary { background: var(--stationary); }
+  .badge.plain { background: #e9ecf1; color: var(--ink); }
+
+  /* conversations */
+  .conv-layout { display: grid; grid-template-columns: 1fr 320px; gap: 16px; align-items: start; }
+  .turns { display: flex; flex-direction: column; gap: 8px; max-height: 64vh; overflow-y: auto; padding-right: 4px; }
+  .turn { padding: 8px 12px; border-radius: 10px; max-width: 85%; }
+  .turn.therapist { background: var(--therapist); align-self: flex-start; }
+  .turn.client { background: var(--client); align-self: flex-end; }
+  .turn.src { box-shadow: inset 0 0 0 2px var(--active); }
+  .who { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
+  .sticky { position: sticky; top: 0; }
+
+  /* chat */
+  .chat { display: flex; flex-direction: column; height: calc(100vh - 150px); min-height: 420px; }
+  .chat-log { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding: 4px 2px 12px; }
+  .msg { padding: 10px 14px; border-radius: 12px; max-width: 80%; white-space: pre-wrap; }
+  .msg.user { background: var(--accent); color: #fff; align-self: flex-end; }
+  .msg.bot { background: var(--panel); border: 1px solid var(--line); align-self: flex-start; }
+  .msg.bot.urgent { border-color: var(--urgent); background: #fdf1f1; }
+  .msg.bot.review { border-color: var(--review); background: #fdf7ec; }
+  .msg-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; white-space: normal; }
+  .cite { display: inline-block; font-size: 11px; background: var(--accent-soft); color: var(--accent); border-radius: 4px; padding: 0 5px; margin: 0 1px; text-decoration: none; vertical-align: 1px; }
+  .sources { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--line); font-size: 12px; white-space: normal; }
+  .sources a { color: var(--accent); }
+  .composer { border-top: 1px solid var(--line); padding-top: 12px; }
+  .composer .row { margin-top: 8px; }
+  .typing { color: var(--muted); font-style: italic; }
+  .empty { margin: auto; text-align: center; color: var(--muted); max-width: 420px; }
+
+  /* audio */
+  .seg { padding: 8px 12px; border-radius: 8px; background: #f7f8fa; margin-bottom: 6px; }
+  .seg.low { background: #fdf3e3; box-shadow: inset 3px 0 0 var(--uncertain); }
+  .seg .t { font-size: 11px; color: var(--muted); }
+  .metric { font-size: 26px; font-weight: 700; }
+
+  /* activity */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+  .stat .v { font-size: 22px; font-weight: 700; }
+  .stat .l { font-size: 12px; color: var(--muted); }
+  .chart { overflow-x: auto; }
+  .legend { display: flex; gap: 14px; font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  table { border-collapse: collapse; width: 100%; font-size: 12px; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 600; }
+  .table-wrap { max-height: 360px; overflow: auto; }
+  .bad { color: var(--urgent); font-weight: 600; }
+  details summary { cursor: pointer; font-weight: 600; }
+
+  @media (max-width: 860px) {
+    body { flex-direction: column; }
+    aside { width: 100%; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 4px; padding: 10px 12px; }
+    .brand small, .group-label, .status { display: none; }
+    .group { margin: 0; display: flex; gap: 4px; }
+    .nav-item { width: auto; }
+    .view { padding: 20px 16px 40px; }
+    .conv-layout, .two { grid-template-columns: 1fr; }
+    .chat { height: auto; }
+    dl.kv { grid-template-columns: 1fr; }
+  }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<aside>
+  <div class="brand">Mental-Health Support Prototype<small>Educational, inference-only. Not a clinical tool.</small></div>
+  <div class="group">
+    <div class="group-label">Track A · Conversations</div>
+    <button class="nav-item on" data-view="conv">Conversations</button>
+    <button class="nav-item" data-view="chat">Chatbot</button>
+    <button class="nav-item" data-view="audio">Speech-to-text</button>
+  </div>
+  <div class="group">
+    <div class="group-label">Track B · Accelerometer</div>
+    <button class="nav-item" data-view="activity">Activity report</button>
+  </div>
+  <div class="status" id="status">Checking models…</div>
+</aside>
+
+<main>
+  <!-- ================= Conversations ================= -->
+  <section class="view" id="view-conv">
+    <div class="view-head">
+      <h1>AnnoMI conversations</h1>
+      <p>Counselling transcripts rebuilt in utterance order, with what the client actually said pulled out.</p>
+    </div>
+    <div class="card">
+      <div class="row">
+        <select id="conv-select" style="flex:1"><option>Loading…</option></select>
+      </div>
+      <div id="conv-meta" class="hint" style="margin-top:8px"></div>
+    </div>
+    <div class="conv-layout">
+      <div class="card"><div id="conv-turns" class="turns"></div></div>
+      <div class="card sticky">
+        <h2>Client statement</h2>
+        <div id="conv-statement" class="small muted">Pick a conversation.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Chatbot ================= -->
+  <section class="view" id="view-chat" hidden>
+    <div class="view-head">
+      <h1>Depression information chatbot</h1>
+      <p>Answers only from approved WHO, NIMH, MedlinePlus and NICE passages, with citations.</p>
+    </div>
+    <div class="card chat">
+      <div class="chat-log" id="chat-log">
+        <div class="empty" id="chat-empty">
+          Ask a general question about depression.<br>
+          <span class="small">Crisis messages get a fixed "contact a human" reply, never an AI-written one. Routing labels are an artificial software demo, not clinical triage.</span>
+        </div>
+      </div>
+      <div class="composer">
+        <textarea id="chat-q" rows="2" placeholder="e.g. What are common symptoms of depression?"></textarea>
+        <div class="row">
+          <button class="btn" id="chat-send">Send</button>
+          <span class="hint">Try:</span>
+          <button class="chip" data-q="What are common symptoms of depression?">Symptoms</button>
+          <button class="chip" data-q="What treatments are available for depression?">Treatment</button>
+          <button class="chip" data-q="What is the best diet for a broken leg?">Off-topic</button>
+          <button class="chip" data-q="I don't want to be alive anymore">Safety case</button>
+          <button class="chip" data-q="I am not thinking about hurting myself">Negated</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Speech-to-text ================= -->
+  <section class="view" id="view-audio" hidden>
+    <div class="view-head">
+      <h1>Speech-to-text</h1>
+      <p>Upload a clip. Whisper transcribes it, flags unclear parts, and the text becomes a statement record.</p>
+    </div>
+    <div class="card">
+      <div class="label" style="margin-top:0">Audio file</div>
+      <input type="file" id="audio-file" accept="audio/*,.wav,.mp3,.m4a,.ogg,.flac,.webm">
+      <div class="label">Reference transcript <span style="text-transform:none;font-weight:400">(optional: the exact words spoken, for word error rate)</span></div>
+      <textarea id="audio-ref" rows="2"></textarea>
+      <div class="row" style="margin-top:12px">
+        <button class="btn" id="audio-run">Transcribe</button>
+        <span class="hint">wav, mp3, m4a, ogg, flac · the file is deleted right after processing and never linked to AnnoMI</span>
+      </div>
+    </div>
+    <div id="audio-out"></div>
+  </section>
+
+  <!-- ================= Activity ================= -->
+  <section class="view" id="view-activity" hidden>
+    <div class="view-head">
+      <h1>Accelerometer activity report</h1>
+      <p>Raw WISDM phone accelerometer clips: signal checks, windowed movement features, active/stationary labels.</p>
+    </div>
+    <div class="disclaimer">Independent of Track A. A short controlled clip says nothing about daily activity or depression, and a still phone may simply be on a table.</div>
+    <div class="card">
+      <div class="row">
+        <label>Subject <select id="subj-select"><option>Loading…</option></select></label>
+        <label style="flex:1">Clip <select id="clip-select" style="width:100%"></select></label>
+        <button class="btn" id="report-run">Build report</button>
+      </div>
+    </div>
+    <div id="report-out"></div>
+  </section>
+</main>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const list = (xs, empty = "none") => xs && xs.length ? "<ul class='plain'>" + xs.map(x => `<li>${esc(x)}</li>`).join("") + "</ul>" : `<span class='muted'>${empty}</span>`;
+
+async function api(path, opts) {
+  const r = await fetch(path, opts);
+  const text = await r.text();
+  let body; try { body = JSON.parse(text); } catch { body = text; }
+  if (!r.ok) throw new Error(typeof body === "object" ? (typeof body.detail === "string" ? body.detail : JSON.stringify(body.detail ?? body)) : body);
+  return body;
+}
+
+// ---------- navigation ----------
+const inited = {};
+function show(view) {
+  document.querySelectorAll(".nav-item").forEach(b => b.classList.toggle("on", b.dataset.view === view));
+  document.querySelectorAll(".view").forEach(v => v.hidden = v.id !== "view-" + view);
+  if (!inited[view]) { inited[view] = true; ({ conv: initConversations, chat: initChat, activity: initActivity }[view] || (() => {}))(); }
+  try { localStorage.setItem("view", view); } catch {}
+}
+document.querySelectorAll(".nav-item").forEach(b => b.onclick = () => show(b.dataset.view));
+
+// ---------- model status ----------
+async function pollStatus() {
+  try {
+    const s = await api("/track-a/status");
+    const all = Object.values(s.loaded).every(Boolean);
+    const dev = s.gpu ? `${esc(s.gpu.name)} · ${s.gpu.vram_used_gb}/${s.gpu.vram_total_gb} GB` : "CPU";
+    $("#status").innerHTML = `<div><span class="dot ${all ? "ok" : ""}"></span><b>${all ? "Models ready" : "Loading models…"}</b></div>
+      <div style="margin-top:6px">Chat: ${esc(s.chatbot)}<br>Search: ${esc(s.search)}<br>ASR: ${esc(s.whisper)}<br>Device: ${dev}</div>
+      <div style="margin-top:6px"><a href="/docs">API docs</a></div>`;
+    if (!all) setTimeout(pollStatus, 3000);
+  } catch { $("#status").textContent = "Status unavailable"; }
+}
+
+// ---------- Conversations ----------
+async function initConversations() {
+  try {
+    const convs = await api("/track-a/annomi");
+    $("#conv-select").innerHTML = convs.map(c => {
+      const id = c.conversation_id.replace("annomi-", "");
+      return `<option value="${id}">#${esc(id)} · ${esc(c.topic)} · ${esc(c.mi_quality)}-quality MI · ${c.n_turns} turns</option>`;
+    }).join("");
+    $("#conv-select").onchange = loadConversation;
+    loadConversation();
+  } catch (e) { $("#conv-meta").innerHTML = `<span class="err">${esc(e.message)}</span>`; }
+}
+
+async function loadConversation() {
+  $("#conv-turns").innerHTML = '<span class="muted">Loading…</span>';
+  try {
+    const c = await api(`/track-a/annomi/${$("#conv-select").value}`);
+    $("#conv-meta").innerHTML = `${esc(c.conversation_id)} · "${esc(c.mi_quality)}" is a counselling-quality label, not a diagnosis.`;
+    const st = c.statements[0] || {};
+    const src = new Set(st.source_turn_ids || []);
+    $("#conv-statement").innerHTML = `
+      <div class="label" style="margin-top:0">Duration</div>${esc(st.duration_if_said) || "<span class='muted'>not said</span>"}
+      <div class="label">Change in functioning</div>${esc(st.changes_in_functioning_if_said) || "<span class='muted'>not said</span>"}
+      <div class="label">Reported concerns (${(st.reported_concerns || []).length})</div>${list(st.reported_concerns, "none found")}
+      <div class="label">Explicit negations (${(st.explicit_negations || []).length})</div>${list(st.explicit_negations, "none found")}
+      <div class="label">Source turns</div><span class="muted">${src.size} turns, outlined green in the transcript</span>`;
+    $("#conv-turns").innerHTML = c.turns.map(t =>
+      `<div class="turn ${t.interlocutor} ${src.has(t.utterance_id) ? "src" : ""}"><div class="who">${t.interlocutor} · #${t.utterance_id}</div>${esc(t.text)}</div>`).join("");
+  } catch (e) { $("#conv-turns").innerHTML = `<span class="err">${esc(e.message)}</span>`; }
+}
+
+// ---------- Chatbot ----------
+let passages = {};
+async function initChat() {
+  try { (await api("/track-a/passages")).forEach(p => passages[p.chunk_id] = p); } catch {}
+}
+
+function renderAnswer(text) {
+  // [chunk-id, chunk-id] markers -> small citation chips
+  return esc(text).replace(/\[([a-z0-9-]+(?:,\s*[a-z0-9-]+)*)\]/gi, (m, ids) =>
+    ids.split(",").map(id => id.trim()).filter(id => passages[id] || /-\d+$/.test(id))
+      .map(id => `<a class="cite" href="${esc(passages[id]?.url || "#")}" target="_blank" rel="noopener" title="${esc(passages[id]?.title || id)}">${esc(id)}</a>`).join(""));
+}
+
+async function sendChat(q) {
+  q = (q ?? $("#chat-q").value).trim();
+  if (!q) return;
+  $("#chat-q").value = "";
+  $("#chat-empty")?.remove();
+  const log = $("#chat-log");
+  log.insertAdjacentHTML("beforeend", `<div class="msg user">${esc(q)}</div><div class="msg bot typing" id="typing">Thinking…</div>`);
+  log.scrollTop = log.scrollHeight;
+  $("#chat-send").disabled = true;
+  try {
+    const r = await api("/track-a/chat", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ conversation_or_case_id: "chat-session", question: q }) });
+    const cat = r.routing.category;
+    const src = r.cited_passage_ids.map(id => {
+      const p = passages[id];
+      return p ? `<li><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a> <span class="muted">${esc(id)}</span></li>` : `<li>${esc(id)}</li>`;
+    }).join("");
+    $("#typing").outerHTML = `<div class="msg bot ${cat}">
+      <div class="msg-meta"><span class="badge ${cat}">${cat}</span>${r.abstained ? '<span class="badge plain">no answer given</span>' : ""}
+        <span class="hint" title="${esc(r.routing.rationale)}">routing demo · hover for reason</span></div>${renderAnswer(r.answer)}
+      ${src ? `<div class="sources"><b>Sources</b><ul class="plain">${src}</ul></div>` : ""}</div>`;
+  } catch (e) {
+    $("#typing").outerHTML = `<div class="msg bot err">Error: ${esc(e.message)}</div>`;
+  }
+  $("#chat-send").disabled = false;
+  log.scrollTop = log.scrollHeight;
+}
+$("#chat-send").onclick = () => sendChat();
+$("#chat-q").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendChat(); } });
+document.querySelectorAll("[data-q]").forEach(b => b.onclick = () => sendChat(b.dataset.q));
+
+// ---------- Speech-to-text ----------
+$("#audio-run").onclick = async () => {
+  const f = $("#audio-file").files[0];
+  if (!f) { $("#audio-out").innerHTML = '<div class="card err">Choose an audio file first.</div>'; return; }
+  const fd = new FormData();
+  fd.append("file", f);
+  const ref = $("#audio-ref").value.trim();
+  if (ref) fd.append("reference_transcript", ref);
+  $("#audio-run").disabled = true;
+  const t0 = Date.now();
+  $("#audio-out").innerHTML = `<div class="card muted">Transcribing ${esc(f.name)}…</div>`;
+  try {
+    const r = await api("/track-a/audio/upload", { method: "POST", body: fd });
+    const a = r.audio, ev = r.asr_evaluation, st = r.statement;
+    const secs = ((Date.now() - t0) / 1000).toFixed(1);
+    $("#audio-out").innerHTML = `
+      <div class="card">
+        <h2>Transcript</h2>
+        ${r.segments.map(s => `<div class="seg ${s.low_confidence ? "low" : ""}">
+          <div class="t">${s.start_s.toFixed(1)}–${s.end_s.toFixed(1)} s${s.low_confidence ? " · low confidence: " + esc(s.reasons.join("; ")) : ""}</div>${esc(s.text)}</div>`).join("")
+          || "<span class='muted'>No speech detected.</span>"}
+        <div class="hint" style="margin-top:8px">${esc(r.asr_model)} · processed in ${secs} s · ${esc(r.case_id)}</div>
+      </div>
+      ${ev ? `<div class="card"><h2>Compared with your reference</h2>
+        <div class="row" style="gap:32px">
+          <div><div class="metric">${(ev.word_error_rate * 100).toFixed(1)}%</div><div class="hint">word error rate</div></div>
+          <div><div class="metric ${ev.negation_preserved ? "" : "bad"}">${ev.negation_preserved ? "Yes" : "No"}</div><div class="hint">negations preserved</div></div>
+        </div>
+        ${ev.critical_word_flags.length ? `<div class="label">Negation changes</div><span class="bad">${esc(ev.critical_word_flags.join(", "))}</span>` : ""}</div>` : ""}
+      <div class="two">
+        <div class="card"><h2>Statement record</h2><dl class="kv">
+          <dt>Duration</dt><dd>${esc(st.duration_if_said) || "<span class='muted'>not said</span>"}</dd>
+          <dt>Change in functioning</dt><dd>${esc(st.changes_in_functioning_if_said) || "<span class='muted'>not said</span>"}</dd>
+          <dt>Reported concerns</dt><dd>${list(st.reported_concerns)}</dd>
+          <dt>Explicit negations</dt><dd>${list(st.explicit_negations)}</dd></dl></div>
+        <div class="card"><h2>Audio check</h2><dl class="kv">
+          <dt>File</dt><dd>${esc(a.filename)}</dd>
+          <dt>Format</dt><dd>${esc(a.format)} · ${a.sample_rate_hz ?? "?"} Hz · ${a.n_channels ?? "?"} ch</dd>
+          <dt>Length</dt><dd>${a.duration_s.toFixed(1)} s</dd>
+          <dt>Quality flags</dt><dd>${a.quality_flags.length ? `<span class="bad">${esc(a.quality_flags.join(", "))}</span>` : "none"}</dd></dl></div>
+      </div>`;
+  } catch (e) { $("#audio-out").innerHTML = `<div class="card err">${esc(e.message)}</div>`; }
+  $("#audio-run").disabled = false;
+};
+
+// ---------- Activity ----------
+const ACTIVITIES = { A: "Walking", B: "Jogging", C: "Stairs", D: "Sitting", E: "Standing", F: "Typing", G: "Brushing teeth",
+  H: "Eating soup", I: "Eating chips", J: "Eating pasta", K: "Drinking", L: "Eating sandwich", M: "Kicking ball",
+  O: "Playing catch", P: "Dribbling", Q: "Writing", R: "Clapping", S: "Folding clothes" };
+
+async function initActivity() {
+  try {
+    const subs = await api("/track-b/subjects");
+    $("#subj-select").innerHTML = subs.map(s => `<option>${s}</option>`).join("");
+    $("#subj-select").onchange = loadClips;
+    await loadClips();
+  } catch (e) { $("#report-out").innerHTML = `<div class="card err">${esc(e.message)}</div>`; }
+}
+
+async function loadClips() {
+  $("#clip-select").innerHTML = "<option>Loading…</option>";
+  const clips = await api(`/track-b/clips/${$("#subj-select").value}`);
+  $("#clip-select").innerHTML = clips.map((c, i) =>
+    `<option value="${c.activity_label}/${i}">${ACTIVITIES[c.activity_label] || c.activity_label} (${c.activity_label}) · ${c.n_readings} readings</option>`).join("");
+}
+
+$("#report-run").onclick = async () => {
+  const path = `/track-b/report/${$("#subj-select").value}/${$("#clip-select").value}`;
+  $("#report-out").innerHTML = '<div class="card muted">Processing…</div>';
+  try { renderReport(await api(path), path); }
+  catch (e) { $("#report-out").innerHTML = `<div class="card err">${esc(e.message)}</div>`; }
+};
+
+function renderReport(r, path) {
+  const w = r.windows, q = r.quality;
+  const count = s => w.filter(x => x.state === s).length;
+  const dur = w.length ? w[w.length - 1].end_time_s : 0;
+  const gt = r.ground_truth_activity_label;
+  const flags = [
+    ["Total readings", q.total_readings],
+    ["Missing values", q.missing_count, q.missing_count > 0],
+    ["Duplicate timestamps", q.duplicate_timestamp_count, q.duplicate_timestamp_count > 0],
+    ["Gaps", q.gap_count, q.gap_count > 0],
+    ["Largest gap", q.max_gap_seconds.toFixed(2) + " s"],
+    ["Out-of-order timestamps", q.non_monotonic_count, q.non_monotonic_count > 0],
+    ["Coverage", (q.coverage_ratio * 100).toFixed(1) + "%", q.coverage_ratio < 0.9],
+    ["Stationary phone suspected", q.stationary_phone_suspected ? "yes" : "no", q.stationary_phone_suspected],
+  ];
+  $("#report-out").innerHTML = `
+    <div class="stats">
+      <div class="stat"><div class="v">${gt ? esc(ACTIVITIES[gt] || gt) : "-"}</div><div class="l">True activity label</div></div>
+      <div class="stat"><div class="v">${(dur / 60).toFixed(1)} min</div><div class="l">${w.length} windows · ${r.sampling_hz_estimated.toFixed(1)} Hz</div></div>
+      <div class="stat"><div class="v" style="color:var(--active)">${count("active")}</div><div class="l">Active windows</div></div>
+      <div class="stat"><div class="v" style="color:var(--stationary)">${count("stationary")}</div><div class="l">Stationary windows</div></div>
+      <div class="stat"><div class="v" style="color:var(--uncertain)">${count("uncertain")}</div><div class="l">Uncertain windows</div></div>
+    </div>
+    <div class="card">
+      <h2>Movement intensity per window</h2>
+      <div class="chart">${chartSVG(w)}</div>
+      <div class="legend"><span><i style="background:var(--active)"></i>active</span><span><i style="background:var(--stationary)"></i>stationary</span><span><i style="background:var(--uncertain)"></i>uncertain (too little data)</span></div>
+    </div>
+    <div class="two">
+      <div class="card"><h2>Signal quality</h2>
+        <table>${flags.map(([k, v, bad]) => `<tr><th>${k}</th><td class="${bad ? "bad" : ""}">${esc(v)}</td></tr>`).join("")}</table>
+        <div class="hint" style="margin-top:8px">${esc(r.clip_id)} · ${esc(r.device)} ${esc(r.sensor)} · ${esc(r.units)}</div>
+      </div>
+      <div class="card"><h2>Limitations</h2>${list(r.limitations)}</div>
+    </div>
+    <div class="card"><details><summary>Window features (${w.length}) · <a href="${path}/csv" target="_blank">open as CSV</a></summary>
+      <div class="table-wrap" style="margin-top:10px"><table>
+      <tr><th>#</th><th>Start (s)</th><th>End (s)</th><th>Samples</th><th>Mean |a|</th><th>Std |a|</th><th>Intensity</th><th>State</th></tr>
+      ${w.map(x => `<tr><td>${x.window_index}</td><td>${x.start_time_s.toFixed(1)}</td><td>${x.end_time_s.toFixed(1)}</td><td>${x.n_samples}</td>
+        <td>${x.mean_magnitude.toFixed(2)}</td><td>${x.std_magnitude.toFixed(2)}</td><td>${x.movement_intensity.toFixed(3)}</td>
+        <td><span class="badge ${x.state}">${x.state}</span></td></tr>`).join("")}
+      </table></div></details></div>`;
+}
+
+function chartSVG(w) {
+  if (!w.length) return '<span class="muted">No windows.</span>';
+  const H = 190, pad = 34, bw = Math.max(8, Math.min(40, 880 / w.length)), W = pad + w.length * bw + 10;
+  const max = Math.max(...w.map(x => x.movement_intensity), 0.001);
+  const col = { active: "var(--active)", stationary: "var(--stationary)", uncertain: "var(--uncertain)" };
+  const bars = w.map((x, i) => {
+    const h = Math.max(1, (x.movement_intensity / max) * (H - 34));
+    return `<rect x="${pad + i * bw + 1}" y="${H - 22 - h}" width="${bw - 2}" height="${h}" fill="${col[x.state]}" rx="2">
+      <title>${x.start_time_s.toFixed(0)}–${x.end_time_s.toFixed(0)} s · ${x.state} · intensity ${x.movement_intensity.toFixed(3)}</title></rect>`;
+  }).join("");
+  return `<svg width="${W}" height="${H}" role="img" aria-label="Movement intensity per window">
+    <line x1="${pad}" y1="${H - 22}" x2="${W}" y2="${H - 22}" stroke="#d5d9e1" />
+    <text x="0" y="14" font-size="10" fill="#687083">${max.toFixed(2)}</text>
+    <text x="0" y="${H - 24}" font-size="10" fill="#687083">0</text>
+    <text x="${pad}" y="${H - 6}" font-size="10" fill="#687083">0 s</text>
+    <text x="${W - 10}" y="${H - 6}" font-size="10" fill="#687083" text-anchor="end">${w[w.length - 1].end_time_s.toFixed(0)} s</text>
+    ${bars}</svg>`;
+}
+
+// ---------- start ----------
+let start = "conv";
+try { start = localStorage.getItem("view") || "conv"; } catch {}
+show(document.getElementById("view-" + start) ? start : "conv");
+pollStatus();
+</script>
+</body>
+</html>

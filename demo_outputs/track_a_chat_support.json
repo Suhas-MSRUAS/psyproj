@@ -1,0 +1,18 @@
+{
+  "conversation_or_case_id": "demo-1",
+  "question": "What are common symptoms of depression?",
+  "answer": "Common symptoms of depression include ongoing sadness or emptiness, irritability, changes in appetite or weight, sleep disturbance, fatigue, and difficulty concentrating, present most of the day nearly every day. [medlineplus-depression-2][who-depression-2] Around 5% of adults worldwide live with depression at any given time, and more women are affected than men. [who-depression-1] Major depressive disorder involves severe symptoms that interfere with daily life. [nimh-depression-1]",
+  "abstained": false,
+  "cited_passage_ids": [
+    "medlineplus-depression-2",
+    "who-depression-2",
+    "who-depression-1",
+    "nimh-depression-1"
+  ],
+  "routing": {
+    "category": "support",
+    "rationale": "No risk or distress phrase in the fixed fixture list matched; routed to general support/information path.",
+    "is_artificial_label": true,
+    "source": "software_routing_demo"
+  }
+}

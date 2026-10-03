@@ -1,0 +1,13 @@
+{
+  "conversation_or_case_id": "demo-1",
+  "question": "I want to kill myself tonight.",
+  "answer": "This sounds urgent. I'm not able to provide crisis support myself, but please reach out right now to a crisis line or emergency services in your area, or to someone you trust who can stay with you. You deserve immediate human help, not an automated response.",
+  "abstained": true,
+  "cited_passage_ids": [],
+  "routing": {
+    "category": "urgent",
+    "rationale": "Unambiguous risk phrase 'kill myself' detected with no negation nearby; routed to the distinct human/emergency escalation path, not a free-form LLM severity judgement.",
+    "is_artificial_label": true,
+    "source": "software_routing_demo"
+  }
+}

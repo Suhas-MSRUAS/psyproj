@@ -1,0 +1,152 @@
+[
+  {
+    "doc_id": "who-depression",
+    "chunk_id": "who-depression-1",
+    "title": "Depressive disorder (depression) - WHO fact sheet",
+    "section": "How common depression is",
+    "url": "https://www.who.int/news-room/fact-sheets/detail/depression",
+    "population": "global",
+    "retrieval_date": "2026-10-03",
+    "text": "Depression is a common mental disorder. WHO estimates that around 5% of adults worldwide live with depression at any given time, and more women are affected than men."
+  },
+  {
+    "doc_id": "who-depression",
+    "chunk_id": "who-depression-2",
+    "title": "Depressive disorder (depression) - WHO fact sheet",
+    "section": "Symptoms and signs of depression",
+    "url": "https://www.who.int/news-room/fact-sheets/detail/depression",
+    "population": "global",
+    "retrieval_date": "2026-10-03",
+    "text": "Typical features include persistent low mood, loss of interest or pleasure in previously enjoyable activities, low energy, poor concentration, disturbed sleep or appetite, and feelings of guilt or low self-worth, present for most of the day for at least two weeks."
+  },
+  {
+    "doc_id": "who-depression",
+    "chunk_id": "who-depression-3",
+    "title": "Depressive disorder (depression) - WHO fact sheet",
+    "section": "Depression versus everyday mood changes, and that effective treatment exists",
+    "url": "https://www.who.int/news-room/fact-sheets/detail/depression",
+    "population": "global",
+    "retrieval_date": "2026-10-03",
+    "text": "Depression is different from ordinary mood fluctuations and short-lived emotional reactions to everyday life. Effective psychological and medication-based treatments exist for mild, moderate, and severe presentations."
+  },
+  {
+    "doc_id": "who-depression",
+    "chunk_id": "who-depression-4",
+    "title": "Depressive disorder (depression) - WHO fact sheet",
+    "section": "Physical illness, suicide risk and seeking care early",
+    "url": "https://www.who.int/news-room/fact-sheets/detail/depression",
+    "population": "global",
+    "retrieval_date": "2026-10-03",
+    "text": "Depression can occur alongside physical illness, and untreated depression increases the risk of suicide. WHO recommends timely care-seeking rather than waiting for symptoms to resolve on their own."
+  },
+  {
+    "doc_id": "nimh-depression",
+    "chunk_id": "nimh-depression-1",
+    "title": "Depression - NIMH health topic",
+    "section": "What depression (major depressive disorder) is",
+    "url": "https://www.nimh.nih.gov/health/topics/depression",
+    "population": "United States",
+    "retrieval_date": "2026-10-03",
+    "text": "NIMH describes major depressive disorder as going beyond everyday sadness: symptoms are severe enough to interfere with sleeping, eating, working, and relationships."
+  },
+  {
+    "doc_id": "nimh-depression",
+    "chunk_id": "nimh-depression-2",
+    "title": "Depression - NIMH health topic",
+    "section": "Causes and risk factors of depression",
+    "url": "https://www.nimh.nih.gov/health/topics/depression",
+    "population": "United States",
+    "retrieval_date": "2026-10-03",
+    "text": "Contributing factors are thought to be a combination of genetic, biological, environmental, and psychological influences, rather than any single cause."
+  },
+  {
+    "doc_id": "nimh-depression",
+    "chunk_id": "nimh-depression-3",
+    "title": "Depression - NIMH health topic",
+    "section": "Types and forms of depression",
+    "url": "https://www.nimh.nih.gov/health/topics/depression",
+    "population": "United States",
+    "retrieval_date": "2026-10-03",
+    "text": "Presentations vary between individuals; NIMH describes subtypes such as seasonal patterns and depression with psychotic features."
+  },
+  {
+    "doc_id": "nimh-depression",
+    "chunk_id": "nimh-depression-4",
+    "title": "Depression - NIMH health topic",
+    "section": "Treatments and therapies for depression",
+    "url": "https://www.nimh.nih.gov/health/topics/depression",
+    "population": "United States",
+    "retrieval_date": "2026-10-03",
+    "text": "Evidence-based treatments include psychotherapy such as cognitive behavioral therapy, antidepressant medication, and sometimes other interventions, typically used in combination under clinical supervision."
+  },
+  {
+    "doc_id": "medlineplus-depression",
+    "chunk_id": "medlineplus-depression-1",
+    "title": "Depression - MedlinePlus",
+    "section": "Depression is an illness, not a personal weakness",
+    "url": "https://medlineplus.gov/depression.html",
+    "population": "United States",
+    "retrieval_date": "2026-10-03",
+    "text": "Depression is a mood disorder, not a personal weakness or something a person can simply snap out of."
+  },
+  {
+    "doc_id": "medlineplus-depression",
+    "chunk_id": "medlineplus-depression-2",
+    "title": "Depression - MedlinePlus",
+    "section": "Symptoms of depression",
+    "url": "https://medlineplus.gov/depression.html",
+    "population": "United States",
+    "retrieval_date": "2026-10-03",
+    "text": "Commonly reported symptoms include ongoing sadness or emptiness, irritability, changes in appetite or weight, sleep disturbance, fatigue, and difficulty concentrating, present most of the day nearly every day."
+  },
+  {
+    "doc_id": "medlineplus-depression",
+    "chunk_id": "medlineplus-depression-3",
+    "title": "Depression - MedlinePlus",
+    "section": "When to see a doctor or healthcare provider",
+    "url": "https://medlineplus.gov/depression.html",
+    "population": "United States",
+    "retrieval_date": "2026-10-03",
+    "text": "MedlinePlus encourages speaking with a healthcare provider if symptoms persist for more than two weeks or interfere with daily functioning, since earlier treatment is associated with better outcomes."
+  },
+  {
+    "doc_id": "nice-ng222",
+    "chunk_id": "nice-ng222-1",
+    "title": "Depression in adults: treatment and management (NG222) - NICE",
+    "section": "What the NICE adult depression guideline covers",
+    "url": "https://www.nice.org.uk/guidance/ng222",
+    "population": "United Kingdom, adults 18+",
+    "retrieval_date": "2026-10-03",
+    "text": "NICE guideline NG222 covers identifying, treating, and managing depression in adults aged 18 and over in the UK. It is written for use by clinicians and is not an automatically executable clinical policy."
+  },
+  {
+    "doc_id": "nice-ng222",
+    "chunk_id": "nice-ng222-2",
+    "title": "Depression in adults: treatment and management (NG222) - NICE",
+    "section": "Treatment for less severe (mild) depression",
+    "url": "https://www.nice.org.uk/guidance/ng222",
+    "population": "United Kingdom, adults 18+",
+    "retrieval_date": "2026-10-03",
+    "text": "For less severe depression, NICE suggests clinicians discuss low-intensity options first, such as guided self-help, group cognitive behavioural therapy, or structured exercise, before routinely offering antidepressants, based on patient preference."
+  },
+  {
+    "doc_id": "nice-ng222",
+    "chunk_id": "nice-ng222-3",
+    "title": "Depression in adults: treatment and management (NG222) - NICE",
+    "section": "Treatment for more severe depression",
+    "url": "https://www.nice.org.uk/guidance/ng222",
+    "population": "United Kingdom, adults 18+",
+    "retrieval_date": "2026-10-03",
+    "text": "For more severe depression, NICE recommends clinicians consider combining psychological therapy with antidepressant medication, along with closer monitoring."
+  },
+  {
+    "doc_id": "nice-ng222",
+    "chunk_id": "nice-ng222-4",
+    "title": "Depression in adults: treatment and management (NG222) - NICE",
+    "section": "Shared decision-making between patient and clinician about treatment",
+    "url": "https://www.nice.org.uk/guidance/ng222",
+    "population": "United Kingdom, adults 18+",
+    "retrieval_date": "2026-10-03",
+    "text": "NICE stresses shared decision-making between clinician and patient and ongoing review over time, rather than a one-time automated judgement."
+  }
+]
