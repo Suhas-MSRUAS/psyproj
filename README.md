@@ -9,6 +9,8 @@ automated proof of that separation.
 
 No training, fine-tuning, or weight updates happen anywhere in this repo.
 
+**Repository:** https://github.com/Suhas-MSRUAS/psyproj
+
 ## Project layout
 
 ```
@@ -43,7 +45,10 @@ See `data/audio/README.md` for exactly how to add fictional audio cases.
 ## 2. Setup
 
 ```powershell
-conda activate D:\psyproj\psy            # project env (Python 3.12)
+git clone https://github.com/Suhas-MSRUAS/psyproj.git
+cd psyproj
+conda create -p .\psy python=3.12 -y     # project env (ignored by git)
+conda activate .\psy
 pip install -r requirements.txt          # core: pipeline, API, UI, tests (stub backends)
 pip install torch==2.4.1+cu124 --index-url https://download.pytorch.org/whl/cu124
 pip install -r requirements-real.txt     # real models (see the header of that file)
