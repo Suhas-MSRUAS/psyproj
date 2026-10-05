@@ -11,9 +11,10 @@ from pathlib import Path
 import pytest
 
 from common.config import get_config, resolve_path
+from common.schemas import QualityFlags, WindowFeature
 from track_b.activity import GROUND_TRUTH_STATE_BY_LABEL
 from track_b.ingest_accel import parse_wisdm_file, split_into_clips
-from track_b.report import build_activity_report
+from track_b.report import build_activity_report, recording_notes, summarize_windows
 
 FIXTURES = Path(__file__).resolve().parent.parent / "fixtures"
 
@@ -69,3 +70,50 @@ def test_sensor_failure_flags_are_raised_without_asserting_daily_activity():
     # and the report always carries explicit non-extrapolation limitations.
     assert all(w.state in {"active", "stationary", "uncertain"} for w in report.windows)
     assert any("daily activity" in limitation for limitation in report.limitations)
+
+
+def _window(i: int, state: str) -> WindowFeature:
+    return WindowFeature(window_index=i, start_time_s=i * 10.0, end_time_s=(i + 1) * 10.0, n_samples=200,
+                         mean_magnitude=9.8, std_magnitude=1.0, movement_intensity=0.1, state=state)
+
+
+def test_recording_summary_rolls_up_windows_with_fixed_rule():
+    summary = summarize_windows([_window(i, s) for i, s in enumerate(["active"] * 6 + ["stationary"] * 3 + ["uncertain"])])
+    assert (summary.n_windows, summary.duration_s) == (10, 100.0)
+    assert (summary.active_windows, summary.stationary_windows, summary.uncertain_windows) == (6, 3, 1)
+    assert summary.active_fraction + summary.stationary_fraction + summary.uncertain_fraction == pytest.approx(1.0)
+    assert summary.overall_state == "active"
+
+    # Mostly uncertain, or a tie, is never guessed.
+    assert summarize_windows([_window(i, s) for i, s in enumerate(["uncertain"] * 3 + ["active"] * 2)]).overall_state == "uncertain"
+    assert summarize_windows([_window(0, "active"), _window(1, "stationary")]).overall_state == "uncertain"
+    assert summarize_windows([]).overall_state == "uncertain"
+
+    # The report built from a real clip carries the summary, consistent with its windows.
+    df, _ = parse_wisdm_file(FIXTURES / "accel" / "sensor_failure_clip.txt")
+    clip = split_into_clips(df)[0]
+    report = build_activity_report(
+        clip, subject_id=int(clip.subject_id.iloc[0]), activity_label=clip.activity_label.iloc[0], segment_index=0,
+        expected_hz=20, window_seconds=2, window_overlap=0.0,
+        stationary_variance_threshold=0.6, max_gap_s=2.0,
+    )
+    assert report.summary.n_windows == len(report.windows)
+    assert report.summary.active_windows + report.summary.stationary_windows + report.summary.uncertain_windows == len(report.windows)
+
+
+def test_recording_notes_are_clip_specific():
+    df, _ = parse_wisdm_file(FIXTURES / "accel" / "sensor_failure_clip.txt")
+    clip = split_into_clips(df)[0]
+    report = build_activity_report(
+        clip, subject_id=int(clip.subject_id.iloc[0]), activity_label=clip.activity_label.iloc[0], segment_index=0,
+        expected_hz=20, window_seconds=2, window_overlap=0.0,
+        stationary_variance_threshold=0.6, max_gap_s=2.0,
+    )
+    notes = " ".join(report.recording_notes)
+    assert "lying still" in notes and "gap" in notes and "duplicate" in notes
+
+    clean = QualityFlags(total_readings=3600, missing_count=0, duplicate_timestamp_count=0, gap_count=0,
+                         max_gap_seconds=0.05, non_monotonic_count=0, coverage_ratio=1.0,
+                         stationary_phone_suspected=False)
+    clean_summary = summarize_windows([_window(i, "active") for i in range(18)])
+    assert recording_notes(clean_summary, clean, 20, 20.0) == ["No data problems found in this recording."]

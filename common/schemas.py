@@ -153,6 +153,21 @@ class WindowFeature(BaseModel):
     state: Literal["active", "stationary", "uncertain"]
 
 
+class RecordingSummary(BaseModel):
+    """Whole-recording roll-up of the per-window states."""
+
+    duration_s: float
+    n_windows: int
+    active_windows: int
+    stationary_windows: int
+    uncertain_windows: int
+    active_fraction: float
+    stationary_fraction: float
+    uncertain_fraction: float
+    overall_state: Literal["active", "stationary", "uncertain"]
+    overall_state_rule: str
+
+
 class ActivityReport(BaseModel):
     """Track B output for one recording. Id namespace: wisdm-*/ucihar-*"""
 
@@ -164,7 +179,9 @@ class ActivityReport(BaseModel):
     sampling_hz_declared: float
     sampling_hz_estimated: float
     windows: list[WindowFeature]
+    summary: RecordingSummary
     quality: QualityFlags
     ground_truth_activity_label: Optional[str] = None
     supported_activity_states: list[str]
-    limitations: list[str]
+    recording_notes: list[str]  # clip-specific, built from this clip's own data
+    limitations: list[str]  # fixed, apply to every clip

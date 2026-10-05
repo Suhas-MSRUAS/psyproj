@@ -188,6 +188,18 @@
       "state": "active"
     }
   ],
+  "summary": {
+    "duration_s": 180.0,
+    "n_windows": 18,
+    "active_windows": 18,
+    "stationary_windows": 0,
+    "uncertain_windows": 0,
+    "active_fraction": 1.0,
+    "stationary_fraction": 0.0,
+    "uncertain_fraction": 0.0,
+    "overall_state": "active",
+    "overall_state_rule": "Fixed rule, not learned: 'uncertain' if more than half the windows are uncertain; otherwise whichever of active/stationary has more windows; a tie is 'uncertain'."
+  },
   "quality": {
     "total_readings": 3573,
     "missing_count": 0,
@@ -203,6 +215,9 @@
     "active",
     "stationary",
     "uncertain"
+  ],
+  "recording_notes": [
+    "No data problems found in this recording."
   ],
   "limitations": [
     "This is a short, controlled recording and must not be extrapolated to daily activity, longitudinal decline, or depression severity.",

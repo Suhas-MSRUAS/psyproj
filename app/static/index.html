@@ -223,7 +223,7 @@
     <div class="card">
       <div class="row">
         <label>Subject <select id="subj-select"><option>Loading…</option></select></label>
-        <label style="flex:1">Clip <select id="clip-select" style="width:100%"></select></label>
+        <label style="flex:1;display:flex;align-items:center;gap:.3em">Clip <select id="clip-select" style="flex:1;min-width:0"></select></label>
         <button class="btn" id="report-run">Build report</button>
       </div>
     </div>
@@ -416,9 +416,7 @@ $("#report-run").onclick = async () => {
 };
 
 function renderReport(r, path) {
-  const w = r.windows, q = r.quality;
-  const count = s => w.filter(x => x.state === s).length;
-  const dur = w.length ? w[w.length - 1].end_time_s : 0;
+  const w = r.windows, q = r.quality, s = r.summary;
   const gt = r.ground_truth_activity_label;
   const flags = [
     ["Total readings", q.total_readings],
@@ -433,11 +431,13 @@ function renderReport(r, path) {
   $("#report-out").innerHTML = `
     <div class="stats">
       <div class="stat"><div class="v">${gt ? esc(ACTIVITIES[gt] || gt) : "-"}</div><div class="l">True activity label</div></div>
-      <div class="stat"><div class="v">${(dur / 60).toFixed(1)} min</div><div class="l">${w.length} windows · ${r.sampling_hz_estimated.toFixed(1)} Hz</div></div>
-      <div class="stat"><div class="v" style="color:var(--active)">${count("active")}</div><div class="l">Active windows</div></div>
-      <div class="stat"><div class="v" style="color:var(--stationary)">${count("stationary")}</div><div class="l">Stationary windows</div></div>
-      <div class="stat"><div class="v" style="color:var(--uncertain)">${count("uncertain")}</div><div class="l">Uncertain windows</div></div>
+      <div class="stat"><div class="v" style="color:var(--${s.overall_state})" title="${esc(s.overall_state_rule)}">${esc(s.overall_state)}</div><div class="l">Overall (whole recording)</div></div>
+      <div class="stat"><div class="v">${(s.duration_s / 60).toFixed(1)} min</div><div class="l">${s.n_windows} windows · ${r.sampling_hz_estimated.toFixed(1)} Hz</div></div>
+      <div class="stat"><div class="v" style="color:var(--active)">${s.active_windows}</div><div class="l">Active windows · ${(s.active_fraction * 100).toFixed(0)}%</div></div>
+      <div class="stat"><div class="v" style="color:var(--stationary)">${s.stationary_windows}</div><div class="l">Stationary windows · ${(s.stationary_fraction * 100).toFixed(0)}%</div></div>
+      <div class="stat"><div class="v" style="color:var(--uncertain)">${s.uncertain_windows}</div><div class="l">Uncertain windows · ${(s.uncertain_fraction * 100).toFixed(0)}%</div></div>
     </div>
+    <div class="hint" style="margin:-4px 0 12px">${esc(s.overall_state_rule)}</div>
     <div class="card">
       <h2>Movement intensity per window</h2>
       <div class="chart">${chartSVG(w)}</div>
@@ -448,7 +448,9 @@ function renderReport(r, path) {
         <table>${flags.map(([k, v, bad]) => `<tr><th>${k}</th><td class="${bad ? "bad" : ""}">${esc(v)}</td></tr>`).join("")}</table>
         <div class="hint" style="margin-top:8px">${esc(r.clip_id)} · ${esc(r.device)} ${esc(r.sensor)} · ${esc(r.units)}</div>
       </div>
-      <div class="card"><h2>Limitations</h2>${list(r.limitations)}</div>
+      <div class="card"><h2>Limitations</h2>
+        <div class="label" style="margin-top:0">This recording</div>${list(r.recording_notes)}
+        <div class="label">Always applies</div>${list(r.limitations)}</div>
     </div>
     <div class="card"><details><summary>Window features (${w.length}) · <a href="${path}/csv" target="_blank">open as CSV</a></summary>
       <div class="table-wrap" style="margin-top:10px"><table>

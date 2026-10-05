@@ -19,7 +19,7 @@ and real WISDM raw phone accelerometer (51 subjects).
 
 Reproduce: `python scripts/evaluate.py` (chatbot numbers →
 `eval/results_real-embedding_real-llm.json`), `python scripts/demo.py`
-(`demo_outputs/`), `pytest tests/ -v` (22 passed).
+(`demo_outputs/`), `pytest tests/ -v` (24 passed).
 
 ---
 
@@ -218,8 +218,15 @@ phone): `gap_count=1`, `max_gap_seconds≈3.05`, `duplicate_timestamp_count=1`,
 `stationary_phone_suspected=True`. All are flagged without asserting what
 the participant was doing.
 
-The UI's Activity report screen shows the per-window intensity chart, state
-counts, quality flags, limitations and a CSV export for any subject/clip.
+Every report also carries a recording-level `summary` (duration, counts and
+shares of active/stationary/uncertain windows, and one `overall_state` from a
+fixed majority rule that returns "uncertain" when more than half the windows
+are uncertain or active/stationary tie) and clip-specific `recording_notes`
+built from that clip's quality flags, alongside the fixed `limitations`.
+
+The UI's Activity report screen shows the overall state, per-window intensity
+chart, state counts, quality flags, clip notes and limitations, and a CSV
+export for any subject/clip.
 
 ## 5. Safety, privacy and separation (rubric: 20)
 
@@ -246,7 +253,7 @@ counts, quality flags, limitations and a CSV export for any subject/clip.
   used here, with the CUDA torch install line and manual model download
   commands. Nothing in the app downloads silently.
 - Generation is greedy, so answers are repeatable for a given question.
-- `pytest tests/ -v`: **22 passed**. Tests use the stub backends so they run
+- `pytest tests/ -v`: **24 passed**. Tests use the stub backends so they run
   offline in seconds; the real-model numbers above come from
   `scripts/evaluate.py`.
 
